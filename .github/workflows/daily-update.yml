@@ -1,0 +1,32 @@
+name: Daily Project Update
+
+on:
+  schedule:
+    - cron: "15 8 * * *"
+    - cron: "30 11 * * *"
+    - cron: "45 14 * * *"
+    - cron: "20 17 * * *"
+    - cron: "10 20 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Randomly perform update
+        run: |
+          if [ $((RANDOM % 2)) -eq 0 ]; then
+            echo "Updated $(date)" >> activity.log
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add activity.log
+            git commit -m "Daily project update"
+            git push
+          else
+            echo "No update this time"
+          fi
